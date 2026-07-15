@@ -86,6 +86,18 @@
       }
     }
 
+    /* Slide-in Animations & Glows for Cards */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .card {
       background: var(--bg-card);
       backdrop-filter: blur(16px);
@@ -93,7 +105,19 @@
       border-radius: 16px;
       padding: 30px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+      transition: all 0.4s ease;
     }
+
+    .card:hover {
+      box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15);
+      border-color: rgba(99, 102, 241, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .qa-grid .card:nth-child(1) { animation-delay: 0.1s; }
+    .qa-grid .card:nth-child(2) { animation-delay: 0.2s; }
+    .qa-grid .card:nth-child(3) { animation-delay: 0.3s; }
 
     .card-title {
       font-size: 18px;
@@ -119,12 +143,17 @@
       border-radius: 12px;
       padding: 15px;
       text-align: center;
-      transition: transform 0.2s ease;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     .score-item:hover {
       transform: translateY(-3px);
       border-color: var(--indigo);
+      background: rgba(99, 102, 241, 0.03);
     }
 
     .score-value {
@@ -144,6 +173,42 @@
       letter-spacing: 0.5px;
       color: var(--text-muted);
       font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    /* Animated progress bars */
+    .progress-bar-container {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      height: 5px;
+      overflow: hidden;
+      width: 80%;
+      margin: 4px auto 0 auto;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      width: 0;
+      animation: fillBar 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: 0.6s;
+    }
+
+    .progress-bar-fill.indigo-fill {
+      background: linear-gradient(90deg, var(--indigo), #818cf8);
+    }
+    .progress-bar-fill.teal-fill {
+      background: linear-gradient(90deg, var(--teal), #2dd4bf);
+    }
+    .progress-bar-fill.emerald-fill {
+      background: linear-gradient(90deg, var(--emerald), #34d399);
+    }
+    .progress-bar-fill.amber-fill {
+      background: linear-gradient(90deg, var(--amber), #fbbf24);
+    }
+
+    @keyframes fillBar {
+      from { width: 0; }
     }
 
     /* PDF Report download shelf */
@@ -167,6 +232,7 @@
     .report-item:hover {
       border-color: var(--teal);
       background: rgba(20, 184, 166, 0.05);
+      transform: translateX(4px);
     }
 
     .report-info {
@@ -333,6 +399,7 @@
       border-radius: 12px;
       padding: 20px;
       margin-bottom: 30px;
+      animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
     .status-alert-icon {
@@ -344,12 +411,41 @@
       margin: 0 0 4px 0;
       font-size: 16px;
       color: var(--emerald);
+      display: flex;
+      align-items: center;
     }
 
     .status-alert-text p {
       margin: 0;
       font-size: 13px;
       color: var(--text-muted);
+    }
+
+    /* Pulsing Green Dot */
+    .pulse-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse 1.8s infinite;
+      margin-left: 10px;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
     }
   </style>
 </head>
@@ -370,7 +466,7 @@
     <div class="status-alert">
       <div class="status-alert-icon">✓</div>
       <div class="status-alert-text">
-        <h3>11/11 Automated Test Suites Passing (100% Success Rate)</h3>
+        <h3>11/11 Automated Test Suites Passing (100% Success Rate) <span class="pulse-dot"></span></h3>
         <p>FastAPI API integration scenario checks, Pytest unit models, Playwright E2E browsers, and regression suites are validated as fully stable.</p>
       </div>
     </div>
@@ -384,30 +480,55 @@
           <span>📊</span> Quality & Compliance Scorecard
         </h2>
         <div class="score-grid">
+          
           <div class="score-item">
             <div class="score-value emerald-val">98%</div>
             <div class="score-label">Security</div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill emerald-fill" style="width: 98%;"></div>
+            </div>
           </div>
+
           <div class="score-item">
             <div class="score-value">97%</div>
             <div class="score-label">Reliability</div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill teal-fill" style="width: 97%;"></div>
+            </div>
           </div>
+
           <div class="score-item">
             <div class="score-value indigo-val">96%</div>
             <div class="score-label">Dev Exp</div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill indigo-fill" style="width: 96%;"></div>
+            </div>
           </div>
+
           <div class="score-item">
             <div class="score-value emerald-val">95%</div>
             <div class="score-label">Performance</div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill emerald-fill" style="width: 95%;"></div>
+            </div>
           </div>
+
           <div class="score-item">
             <div class="score-value amber-val">95%</div>
             <div class="score-label">Enterprise</div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill amber-fill" style="width: 95%;"></div>
+            </div>
           </div>
+
           <div class="score-item">
             <div class="score-value indigo-val">92%</div>
             <div class="score-label">Scalability</div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill indigo-fill" style="width: 92%;"></div>
+            </div>
           </div>
+
         </div>
         <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); line-height: 1.5;">
           <strong>Security Mitigations:</strong> Universal Bearer JWT verification, PBKDF2 iteration hashing, WebSocket handshake signature checks, clickjacking blocks, and HSTS headers.
