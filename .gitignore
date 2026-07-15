@@ -1,82 +1,51 @@
-# ── Python ──────────────────────────────────────────────────────────────────
+# ── Python / OS / Node Ignores ───────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 *.so
-*.egg
-*.egg-info/
-dist/
-build/
-.eggs/
 venv/
 .venv/
 env/
-pip-wheel-metadata/
-
-# ── Environment & secrets — NEVER commit ────────────────────────────────────
-.env
-.env.*
-!.env.example
-backend/.env
-backend/.env.*
-!backend/.env.example
-*.secret
-*.secrets
-
-# ── Runtime / user data — NEVER commit ──────────────────────────────────────
-backend/voice_data.json
-backend/meet_sessions.json
-backend/users.json
-backend/test_results.json
-
-# ── Dev artifacts & scratch files ────────────────────────────────────────────
-scratch.txt
-git_log.txt
-revs.txt
-temp.js
-old_*.html
-old_*.txt
-older_*.html
-test_*.py
-_cleanup_*.py
-
-# ── OS artefacts ─────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# ── IDE / editor ─────────────────────────────────────────────────────────────
 .vscode/
 .idea/
 .cursor/
-*.swp
-*.swo
-
-# ── Logs ─────────────────────────────────────────────────────────────────────
-*.log
-logs/
-
-# ── Node ─────────────────────────────────────────────────────────────────────
 node_modules/
+*.log
 
-# ── Large training data (HC3 dataset) ────────────────────────────────────────
-backend/voice_module/model/hc3_*.jsonl
+# ── Selective QA / Testing Repository Whitelist ──────────────────────────────
+# Ignore everything in the root by default
+/*
 
-# ── Large / generated binary files ───────────────────────────────────────────
-Report_INTERVIEW/
-backend/voice_module/model/*.pkl
-backend/SachhAI_10_Test_Cases.pdf
+# Exclude these root files/directories from being ignored
+!tests/
+!backend/
+!frontend/
+!README.md
+!.gitignore
+!SachhAI_*.pdf
 
-# ── Plasmo build artifacts (auto-generated) ─────────────────────────────────
-meet-extension/.plasmo/
-# meet-extension/build/
+# Inside backend/, ignore everything except the specific test files and sub-folders
+/backend/*
+!/backend/accuracy_test.py
+!/backend/test_comparator.py
+!/backend/test_api.py
+!/backend/test_detection.py
+!/backend/test_dg.py
+!/backend/voice_module/
 
-# ── Frontend generated assets ───────────────────────────────────────────────
-frontend/sachhai-logo.png
+# Inside backend/voice_module/, ignore everything except the style comparator test
+/backend/voice_module/*
+!/backend/voice_module/test_style_comparator.py
 
-# ── Local JDK installation (not project code) ───────────────────────────────
-java/
-
-# ── Allow Google Meet extension build files ─────────────────────────────────
-!meet-extension/build/
+# Inside frontend/, ignore everything except the QA dashboard and reports
+/frontend/*
+!/frontend/qa_hub.html
+!/frontend/SachhAI_Detailed_Testing_Report.pdf
+!/frontend/SachhAI_Final_Launch_Sign_Off_Report.pdf
+!/frontend/SachhAI_SaaS_Production_Readiness_Report.pdf
+!/frontend/SachhAI_Security_Hardening_Report.pdf
+!/frontend/SachhAI_Test_Report.pdf
