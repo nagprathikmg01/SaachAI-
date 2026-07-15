@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SachhAI — Sign In</title>
+  <meta name="description" content="Sign in to SachhAI interview authenticity portal">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/enhancements.css">
+  <script src="/interactions.js" defer></script>
+  <style>
+    :root {
+      --bg:          #0b0f19;
+      --surface:     rgba(255,255,255,0.05);
+      --glass:       rgba(255,255,255,0.07);
+      --glass-border:rgba(255,255,255,0.12);
+      --text:        #e2e8f0;
+      --muted:       #94a3b8;
+      --accent:      #d97706;
+      --accent2:     #059669;
+      --accent3:     #4b5563;
+      --success:     #10b981;
+      --danger:      #f43f5e;
+      --grad:        linear-gradient(135deg, #d97706 0%, #059669 55%, #4b5563 100%);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Animated mesh background */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(217,119,6,0.25) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 50% at 90% 100%, rgba(5,150,105,0.20) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 40% at 55% 50%,  rgba(75,85,99,0.10) 0%, transparent 50%),
+        #0b0f19;
+      animation: meshPulse 12s ease-in-out infinite alternate;
+    }
+    @keyframes meshPulse { from { opacity: 1; } to { opacity: 0.8; } }
+
+    /* ── Full-page centering ── */
+    .page-wrap {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    /* ── Card ── */
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 24px;
+      padding: 44px 40px 40px;
+      backdrop-filter: blur(24px) saturate(1.4);
+      -webkit-backdrop-filter: blur(24px) saturate(1.4);
+      box-shadow:
+        0 32px 64px rgba(0,0,0,0.5),
+        0 1px 0 rgba(255,255,255,0.07) inset;
+      position: relative;
+      overflow: hidden;
+      animation: cardIn 0.5s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(24px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)    scale(1); }
+    }
+
+    /* Gradient top stripe */
+    .login-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--grad);
+    }
+
+    /* Glow blob */
+    .login-card::after {
+      content: '';
+      position: absolute;
+      width: 280px; height: 280px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+      top: -80px; right: -80px; pointer-events: none;
+    }
+
+    /* ── Logo ── */
+    .logo-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 14px; margin-bottom: 28px;
+    }
+    .logo-icon {
+      width: 64px; height: 64px; border-radius: 18px;
+      background: var(--grad);
+      display: grid; place-items: center; font-size: 28px;
+      box-shadow: 0 8px 28px rgba(99,102,241,0.40);
+      animation: iconBob 4s ease-in-out infinite;
+    }
+    @keyframes iconBob {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-4px); }
+    }
+    .logo-name {
+      font-size: 1.55rem; font-weight: 800; letter-spacing: -0.6px;
+      background: var(--grad);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .logo-sub {
+      font-size: 0.82rem; color: var(--muted); margin-top: -10px;
+      text-align: center;
+    }
+
+    /* ── Form ── */
+    .form-group { margin-bottom: 18px; }
+    label {
+      display: block; font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.1px;
+      color: var(--muted); margin-bottom: 8px;
+    }
+    .input-wrap { position: relative; }
+    .input-wrap svg {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px; color: var(--muted); pointer-events: none;
+      transition: color 0.2s;
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 13px 14px 13px 42px;
+      color: var(--text); font-size: 0.95rem;
+      font-family: 'Inter', sans-serif; outline: none;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+    input:focus {
+      border-color: rgba(99,102,241,0.6);
+      background: rgba(99,102,241,0.06);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    }
+    input:focus ~ svg, .input-wrap:focus-within svg { color: var(--accent); }
+    input::placeholder { color: rgba(148,163,184,0.5); }
+
+    /* Eye toggle for password */
+    .eye-btn {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: var(--muted);
+      display: grid; place-items: center; padding: 4px;
+      transition: color 0.2s;
+    }
+    .eye-btn:hover { color: var(--text); }
+
+    /* ── Sign In button ── */
+    .btn-signin {
+      width: 100%; padding: 14px;
+      background: var(--grad);
+      border: none; border-radius: 12px;
+      color: #fff; font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.2px;
+      box-shadow: 0 6px 24px rgba(99,102,241,0.40);
+      transition: filter 0.2s, transform 0.15s, box-shadow 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 8px;
+    }
+    .btn-signin:hover:not(:disabled) {
+      filter: brightness(1.1);
+      box-shadow: 0 10px 32px rgba(99,102,241,0.50);
+      transform: translateY(-1px);
+    }
+    .btn-signin:active:not(:disabled) { transform: scale(0.98); }
+    .btn-signin:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 20px 0; color: var(--muted); font-size: 0.78rem;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* ── Demo button ── */
+    .btn-demo {
+      width: 100%; padding: 13px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      color: var(--muted); font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-demo:hover { background: rgba(255,255,255,0.09); color: var(--text); }
+
+    /* ── Error / success toast ── */
+    .alert {
+      border-radius: 10px; padding: 11px 14px;
+      font-size: 0.83rem; font-weight: 500;
+      margin-bottom: 18px; display: none;
+      align-items: center; gap: 9px;
+      animation: alertIn 0.25s ease;
+    }
+    @keyframes alertIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+    .alert.error {
+      background: rgba(244,63,94,0.12);
+      border: 1px solid rgba(244,63,94,0.28);
+      color: #fda4af;
+    }
+    .alert.success {
+      background: rgba(16,185,129,0.12);
+      border: 1px solid rgba(16,185,129,0.28);
+      color: #6ee7b7;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 17px; height: 17px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.25);
+      border-top-color: #fff;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Footer ── */
+    .page-footer {
+      margin-top: 20px; text-align: center;
+      font-size: 0.75rem; color: var(--muted);
+    }
+    .page-footer a { color: var(--accent); text-decoration: none; transition: all 0.3s ease; }
+    .page-footer a:hover { text-decoration: underline; color: var(--accent3); }
+  </style>
+</head>
+<body>
+  <!-- Server Warm-up Screen -->
+  <div id="warmup-overlay" style="position: fixed; inset: 0; background: #04060f; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; font-family: 'Inter', sans-serif; color: #ffffff;">
+    <div class="spinner" style="width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #00f5ff; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+    <h2 style="font-weight: 600; font-size: 1.5rem; margin-bottom: 8px; letter-spacing: 0.05em; color: #e2e8f0;">Waking up SachhAI...</h2>
+    <p style="color: #94a3b8; font-size: 0.95rem; text-align: center; max-width: 300px; line-height: 1.5;">Hugging Face Space is loading. This cold start may take up to 20 seconds. Please stand by.</p>
+  </div>
+  <style>
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+
+  <div class="page-wrap">
+    <div class="login-card">
+
+      <!-- Logo -->
+      <div class="logo-wrap">
+        <div class="logo-icon" style="color:white;display:grid;place-items:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+        <div class="logo-name">SachhAI Portal</div>
+        <div class="logo-sub">Sign in to access the interview analysis platform</div>
+      </div>
+
+      <!-- Alert box -->
+      <div class="alert" id="alertBox" role="alert"></div>
+
+      <!-- Form -->
+      <form id="loginForm" autocomplete="off" novalidate>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-wrap">
+            <input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="username" required>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <button type="button" class="eye-btn" id="eyeBtn" aria-label="Toggle password visibility">
+              <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-signin" id="signinBtn">
+          <div class="spinner" id="spinner"></div>
+          <span id="signinText">Sign In →</span>
+        </button>
+      </form>
+
+      <div class="divider">or</div>
+
+      <button class="btn-demo" id="demoBtn">Try Demo Account</button>
+    </div>
+
+    <div class="page-footer">
+      <a href="/">← Back to SachhAI Home</a>
+      &nbsp;·&nbsp; © 2026 SachhAI
+    </div>
+  </div>
+
+  <script>
+    const BASE = '';
+    const $ = id => document.getElementById(id);
+
+    // ── Eye toggle ────────────────────────────────────────────────────────────
+    $('eyeBtn').addEventListener('click', () => {
+      const pw = $('password');
+      const showing = pw.type === 'text';
+      pw.type = showing ? 'password' : 'text';
+      $('eyeIcon').innerHTML = showing
+        ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
+        : '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    });
+
+    // ── Alert helper ──────────────────────────────────────────────────────────
+    function showAlert(msg, type = 'error') {
+      const box = $('alertBox');
+      box.textContent = (type === 'error' ? '⚠ ' : '✓ ') + msg;
+      box.className = `alert ${type}`;
+      box.style.display = 'flex';
+    }
+    function hideAlert() { $('alertBox').style.display = 'none'; }
+
+    // ── Loading state ─────────────────────────────────────────────────────────
+    function setLoading(on) {
+      $('signinBtn').disabled = on;
+      $('spinner').style.display = on ? 'block' : 'none';
+      $('signinText').textContent = on ? 'Signing in…' : 'Sign In →';
+    }
+
+    // ── Login logic ───────────────────────────────────────────────────────────
+    async function doLogin(username, password) {
+      hideAlert();
+      setLoading(true);
+      try {
+        const resp = await fetch(`${BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        const data = await resp.json();
+        if (!resp.ok) {
+          showAlert(data.detail || 'Invalid username or password');
+          return;
+        }
+        // Save auth to localStorage so dashboard and extension can read it
+        const auth = {
+          token:        data.token,
+          username:     data.username,
+          role:         data.role,
+          display_name: data.display_name,
+        };
+        localStorage.setItem('sai_auth', JSON.stringify(auth));
+
+        // Also broadcast to chrome extension if possible
+        try {
+          if (window.chrome && chrome.storage) {
+            chrome.storage.local.set({ sai_auth: auth });
+          }
+        } catch(_) {}
+
+        showAlert(`Welcome, ${data.display_name}! Redirecting…`, 'success');
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 700);
+      } catch(err) {
+        showAlert('Connection error — is the backend running?');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // ── Form submit ───────────────────────────────────────────────────────────
+    $('loginForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const u = $('username').value.trim();
+      const p = $('password').value;
+      if (!u || !p) { showAlert('Please enter both username and password'); return; }
+      doLogin(u, p);
+    });
+
+    // ── Demo account ──────────────────────────────────────────────────────────
+    $('demoBtn').addEventListener('click', () => {
+      $('username').value = 'hr1';
+      $('password').value = 'hr123';
+      showAlert('Demo credentials pre-filled. Click Sign In.', 'success');
+    });
+
+    // ── Auto-redirect if already logged in ────────────────────────────────────
+    const saved = localStorage.getItem('sai_auth');
+    if (saved) {
+      try {
+        const a = JSON.parse(saved);
+        if (a.token) window.location.href = '/dashboard';
+      } catch(_) {}
+    }
+
+    // Waking up check
+    window.addEventListener('load', () => {
+      const checkHealth = async () => {
+        try {
+          await fetch('/health');
+        } catch (e) {
+          console.error("Health check failed:", e);
+        } finally {
+          const overlay = document.getElementById('warmup-overlay');
+          if (overlay) {
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.remove(), 500);
+          }
+        }
+      };
+      checkHealth();
+    });
+  </script>
+</body>
+</html>

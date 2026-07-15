@@ -1,0 +1,82 @@
+# ── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+venv/
+.venv/
+env/
+pip-wheel-metadata/
+
+# ── Environment & secrets — NEVER commit ────────────────────────────────────
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+*.secret
+*.secrets
+
+# ── Runtime / user data — NEVER commit ──────────────────────────────────────
+backend/voice_data.json
+backend/meet_sessions.json
+backend/users.json
+backend/test_results.json
+
+# ── Dev artifacts & scratch files ────────────────────────────────────────────
+scratch.txt
+git_log.txt
+revs.txt
+temp.js
+old_*.html
+old_*.txt
+older_*.html
+test_*.py
+_cleanup_*.py
+
+# ── OS artefacts ─────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE / editor ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+.cursor/
+*.swp
+*.swo
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Node ─────────────────────────────────────────────────────────────────────
+node_modules/
+
+# ── Large training data (HC3 dataset) ────────────────────────────────────────
+backend/voice_module/model/hc3_*.jsonl
+
+# ── Large / generated binary files ───────────────────────────────────────────
+Report_INTERVIEW/
+backend/voice_module/model/*.pkl
+backend/SachhAI_10_Test_Cases.pdf
+
+# ── Plasmo build artifacts (auto-generated) ─────────────────────────────────
+meet-extension/.plasmo/
+# meet-extension/build/
+
+# ── Frontend generated assets ───────────────────────────────────────────────
+frontend/sachhai-logo.png
+
+# ── Local JDK installation (not project code) ───────────────────────────────
+java/
+
+# ── Allow Google Meet extension build files ─────────────────────────────────
+!meet-extension/build/

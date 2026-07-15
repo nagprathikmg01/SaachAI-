@@ -1,0 +1,30 @@
+{
+  "cv_accuracy_mean": 100.0,
+  "cv_accuracy_std": 0.0,
+  "cv_f1_mean": 100.0,
+  "train_accuracy": 100.0,
+  "n_samples": 60,
+  "n_genuine": 30,
+  "n_ai_assisted": 30,
+  "features": [
+    "vocab_jump",
+    "formal_jump",
+    "gram_jump",
+    "sent_jump",
+    "fill_drop",
+    "div_diff",
+    "trans_diff",
+    "word_ratio",
+    "sent_ratio",
+    "t_vocab",
+    "t_formal",
+    "t_gram",
+    "t_sent",
+    "t_trans",
+    "t_fill",
+    "p_fill",
+    "p_vocab",
+    "strong_count"
+  ],
+  "model_type": "VotingClassifier(LR+RF+GB) + StandardScaler"
+}

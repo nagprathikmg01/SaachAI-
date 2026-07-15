@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SachhAI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+<!-- Background layers -->
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div id="toast" class="toast" style="display:none"></div>
+
+<!-- ══════════════════ LOGIN ══════════════════ -->
+<div id="loginScreen" style="display:flex">
+  <div class="login-wrap">
+    <div class="brand-hero">
+      <div class="brand-orb">
+        <svg width="32" height="32" viewBox="0 0 34 34" fill="none">
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#7c3aed"/>
+              <stop offset="100%" stop-color="#00f5ff"/>
+            </linearGradient>
+          </defs>
+          <rect width="34" height="34" rx="9" fill="url(#lg1)" opacity="0.2"/>
+          <ellipse cx="17" cy="16" rx="9" ry="6" stroke="url(#lg1)" stroke-width="1.8" fill="none"/>
+          <circle cx="17" cy="16" r="3" fill="url(#lg1)"/>
+          <polyline points="11,24 14,27 22,20" stroke="#00f5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="brand-name">SachhAI</div>
+      <div class="brand-sub">Interview Integrity Analysis</div>
+    </div>
+
+    <div class="glass-card login-card">
+      <div class="section-tag">Secure Access</div>
+      <p class="login-desc">Sign in via the web portal to begin monitoring interviews in real-time.</p>
+      <button class="btn btn-primary" id="btnOpenPortal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open Sign-In Portal
+      </button>
+      <button class="btn btn-ghost" id="btnCheckAuth" style="margin-top:8px">
+        Already signed in? Refresh
+      </button>
+      <div id="loginStatus" class="login-status" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ APP ══════════════════ -->
+<div id="appScreen" style="display:none;flex-direction:column">
+
+  <!-- Header -->
+  <div class="app-header">
+    <div class="header-brand">
+      <div class="h-orb">
+        <svg width="18" height="18" viewBox="0 0 34 34" fill="none">
+          <defs>
+            <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#7c3aed"/>
+              <stop offset="100%" stop-color="#00f5ff"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="17" cy="16" rx="9" ry="6" stroke="url(#lg2)" stroke-width="2" fill="none"/>
+          <circle cx="17" cy="16" r="3" fill="url(#lg2)"/>
+          <polyline points="11,24 14,27 22,20" stroke="#00f5ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <span class="h-name">SachhAI</span>
+      <span class="h-live-dot" id="hLiveDot" style="display:none"></span>
+    </div>
+    <div class="header-right">
+      <div class="user-chip">
+        <div class="u-avatar" id="userAvatar">?</div>
+        <span class="u-name" id="userDisplay">User</span>
+      </div>
+      <button class="icon-btn" id="btnOpenDash" title="Dashboard">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </button>
+      <button class="icon-btn danger" id="btnLogout" title="Logout">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mic warning -->
+  <div id="micWarn" class="mic-warn" style="display:none">
+    <span>🎙 Mic access needed</span>
+    <button id="btnGrantMic" class="btn-xs">Grant</button>
+  </div>
+
+  <!-- Phase track -->
+  <div class="phase-track">
+    <div class="phase-step">
+      <div class="phase-dot active" id="pDot1"></div>
+      <span>Setup</span>
+    </div>
+    <div class="phase-line"></div>
+    <div class="phase-step">
+      <div class="phase-dot" id="pDot2"></div>
+      <span>Personal</span>
+    </div>
+    <div class="phase-line"></div>
+    <div class="phase-step">
+      <div class="phase-dot" id="pDot3"></div>
+      <span>Technical</span>
+    </div>
+    <div class="phase-line"></div>
+    <div class="phase-step">
+      <div class="phase-dot" id="pDot4"></div>
+      <span>Report</span>
+    </div>
+  </div>
+
+  <div class="session-bar" id="sessionLabel" style="display:none">
+    <span class="session-pulse"></span>
+    Session active
+  </div>
+
+  <!-- ── PHASE: IDLE ── -->
+  <div id="phaseIdle" class="phase-panel" style="display:flex">
+    <div class="panel-hero">
+      <div class="panel-icon-ring">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00f5ff" stroke-width="1.5"><path d="M12 2a3 3 0 013 3v7a3 3 0 01-6 0V5a3 3 0 013-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </div>
+      <div class="panel-title">Start New Session</div>
+      <div class="panel-sub">Enter a candidate ID and choose your audio source.</div>
+    </div>
+
+    <!-- Audio source selector -->
+    <div class="src-card">
+      <div class="src-card-label">Audio Source</div>
+      <div class="src-toggle">
+        <button class="src-btn src-active" id="btnSrcTab">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Candidate Only
+        </button>
+        <button class="src-btn" id="btnSrcMic">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 013 3v7a3 3 0 01-6 0V5a3 3 0 013-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg>
+          Both Voices
+        </button>
+      </div>
+      <div class="src-hint" id="srcHint">🎯 Tab audio — records only the candidate's voice from the call</div>
+    </div>
+
+    <div class="id-row">
+      <input class="id-input" id="candidateIdInput" placeholder="e.g. cand_ABC123">
+      <button class="btn-icon" id="btnGenId" title="Generate ID">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </button>
+    </div>
+    <button class="btn btn-primary btn-lg" id="btnStartSession">Begin Interview Session</button>
+  </div>
+
+  <!-- ── PHASE: PERSONAL ── -->
+  <div id="phasePersonal" class="phase-panel" style="display:none">
+    <div class="round-header personal">
+      <div class="round-icon personal-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div>
+        <div class="round-title">Personal Round</div>
+        <div class="round-sub">Record the candidate's intro to establish their linguistic baseline.</div>
+      </div>
+    </div>
+    <div class="rec-zone" id="recZoneP">
+      <div class="pulse-ring" id="pulseP"></div>
+      <button class="mic-btn" id="btnStartPersonal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 013 3v7a3 3 0 01-6 0V5a3 3 0 013-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        Start Recording
+      </button>
+      <button class="mic-btn stop" id="btnStopPersonal" style="display:none">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12"/></svg>
+        Stop Recording
+      </button>
+      <div class="timer" id="timerP">0:00</div>
+    </div>
+    <div id="recStatusP" class="rec-status idle">Ready to record</div>
+    <div id="personalPreview" class="preview-text" style="display:none"></div>
+    <button class="btn btn-success" id="btnConfirmPersonal" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      Confirm &amp; Lock Baseline
+    </button>
+    <div id="manualPersonalWrap" class="manual-wrap" style="display:none">
+      <div class="manual-label">Or type/paste the personal round text:</div>
+      <textarea id="manualPersonalText" class="manual-input" placeholder="Paste or type candidate's personal introduction here…" rows="4"></textarea>
+      <button class="btn btn-ghost" id="btnManualPersonal">Use This Text as Baseline</button>
+    </div>
+    <button class="btn btn-link" id="btnShowManualP" onclick="document.getElementById('manualPersonalWrap').style.display='block'">
+      ✍ No mic? Type text manually
+    </button>
+  </div>
+
+  <!-- ── PHASE: TECHNICAL ── -->
+  <div id="phaseTechnical" class="phase-panel" style="display:none">
+    <div id="baselineInfo" class="baseline-bar" style="display:none"></div>
+    <div class="round-header technical">
+      <div class="round-icon technical-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00f5ff" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <div>
+        <div class="round-title">Technical Round</div>
+        <div class="round-sub">Live style monitoring active — alerts fire in real-time.</div>
+      </div>
+    </div>
+    <div class="rec-zone tech" id="recZoneT">
+      <div class="pulse-ring tech" id="pulseT"></div>
+      <button class="mic-btn tech" id="btnStartTech">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 013 3v7a3 3 0 01-6 0V5a3 3 0 013-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        Start Recording
+      </button>
+      <button class="mic-btn stop" id="btnStopTech" style="display:none">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12"/></svg>
+        Stop &amp; Analyse
+      </button>
+      <div class="timer" id="timerT">0:00</div>
+    </div>
+    <div id="recStatusT" class="rec-status idle">Ready</div>
+
+    <!-- ── Live Real-Time Score Panel (fed by CC auto-capture) ── -->
+    <div id="liveRtPanel" style="display:none; margin:10px 0; padding:12px 14px;
+      background:rgba(0,245,255,.04); border:1px solid rgba(0,245,255,.15);
+      border-radius:12px; animation: fadeIn .4s ease;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <span style="font-size:10px; font-weight:700; letter-spacing:.6px; color:#00f5ff; text-transform:uppercase;">
+          ⚡ Live CC Analysis
+        </span>
+        <span id="liveRtWords" style="font-size:9px; color:#475569;">0 words</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <div style="font-size:28px; font-weight:800; min-width:36px; text-align:center; transition:color .4s;"
+          id="liveRtScore">—</div>
+        <div style="flex:1">
+          <div id="liveRtVerdict" style="font-size:11px; font-weight:700; text-transform:uppercase;
+            letter-spacing:.4px; color:#64748b; transition:color .4s;">CALIBRATING</div>
+          <div id="liveRtStatus" style="font-size:9.5px; color:#475569; margin-top:2px;">Waiting for CC…</div>
+        </div>
+      </div>
+      <div style="margin-bottom:6px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:3px;">
+          <span style="font-size:9px; color:#64748b; text-transform:uppercase; letter-spacing:.3px;">LSDI Drift</span>
+          <span id="liveRtLsdiVal" style="font-size:9px; color:#94a3b8;">—</span>
+        </div>
+        <div style="height:5px; background:rgba(255,255,255,.08); border-radius:3px; overflow:hidden;">
+          <div id="liveRtLsdiBar" style="height:100%; width:0%; background:#10b981;
+            border-radius:3px; transition:width .6s ease, background .4s;"></div>
+        </div>
+      </div>
+      <div id="liveRtFlag" style="display:none; font-size:9.5px; color:#fbbf24;
+        background:rgba(251,191,36,.08); border-left:2px solid #fbbf24;
+        padding:3px 7px; border-radius:0 4px 4px 0; margin-top:4px; line-height:1.5;"></div>
+    </div>
+
+    <div class="live-header">
+      <span>Live Style Monitor</span>
+      <span class="alert-badge" id="alertCount" style="display:none">0</span>
+    </div>
+    <div id="liveAlerts" class="live-alerts-wrap" style="display:none"></div>
+
+    <div id="manualTechWrap" class="manual-wrap" style="display:none">
+      <div class="manual-label">Or type/paste the technical round text:</div>
+      <textarea id="manualTechText" class="manual-input" placeholder="Paste or type candidate's technical response here…" rows="5"></textarea>
+      <button class="btn btn-primary" id="btnManualTech">Run Full Analysis →</button>
+    </div>
+    <button class="btn btn-link" id="btnShowManualT" onclick="document.getElementById('manualTechWrap').style.display='block'">
+      ✍ No mic? Type text manually
+    </button>
+  </div>
+
+  <!-- ── PHASE: ANALYZING ── -->
+  <div id="phaseAnalyzing" class="phase-panel center" style="display:none">
+    <div class="analyzing-orb">
+      <div class="spin-ring"></div>
+      <div class="spin-ring r2"></div>
+      <div class="spin-ring r3"></div>
+      <svg width="28" height="28" class="analyze-icon" viewBox="0 0 24 24" fill="none" stroke="#00f5ff" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+    </div>
+    <div class="panel-title" style="margin-top:20px">Generating Report</div>
+    <div class="panel-sub">Running full 14-parameter behavioral analysis…</div>
+    <div class="analysis-steps">
+      <div class="a-step active">Linguistic fingerprinting</div>
+      <div class="a-step">Style drift calculation</div>
+      <div class="a-step">Source match scan</div>
+      <div class="a-step">Confidence scoring</div>
+    </div>
+  </div>
+
+  <!-- ── PHASE: COMPLETE ── -->
+  <div id="phaseComplete" class="phase-panel results" style="display:none">
+    <div class="result-header">
+      <div class="score-ring-wrap">
+        <svg class="score-svg" viewBox="0 0 100 100">
+          <circle class="score-bg" cx="50" cy="50" r="44"/>
+          <circle class="score-fill" id="scoreFillCircle" cx="50" cy="50" r="44"/>
+        </svg>
+        <div class="score-inner">
+          <span class="final-score" id="finalScore">—</span>
+          <span class="score-unit">/100</span>
+        </div>
+      </div>
+      <div class="result-meta">
+        <div class="tier-label" id="tierLabel">—</div>
+        <div class="shift-badge" id="shiftBadge">—</div>
+      </div>
+    </div>
+
+    <div class="result-block">
+      <div class="rb-label">Analysis Summary</div>
+      <div class="rb-text" id="finalSummary"></div>
+    </div>
+
+    <div class="conf-panel">
+      <div class="conf-title">Interpretation Panel</div>
+      <div class="conf-grid">
+        <div class="conf-row">
+          <span class="conf-key">Identity Consistency</span>
+          <span class="conf-val" id="confIdentity">—</span>
+        </div>
+        <div class="conf-row">
+          <span class="conf-key">Semantic Continuity</span>
+          <span class="conf-val" id="confSemantic">—</span>
+        </div>
+        <div class="conf-row">
+          <span class="conf-key">Style Drift Severity</span>
+          <span class="conf-val" id="confDrift">—</span>
+        </div>
+        <div class="conf-row">
+          <span class="conf-key">Assistance Confidence</span>
+          <span class="conf-val" id="confAssistance">—</span>
+        </div>
+        <div class="conf-row">
+          <span class="conf-key">Behavioral Reliability</span>
+          <span class="conf-val" id="confReliability">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-block">
+      <div class="rb-label">Behavioral Observations</div>
+      <div class="flags-wrap" id="finalFlags"></div>
+    </div>
+
+    <div class="result-block">
+      <div class="rb-label">Temporal Consistency</div>
+      <div id="driftInfo" class="drift-info"></div>
+    </div>
+
+    <div id="liveAlertSummary" class="live-summary" style="display:none"></div>
+
+    <button class="btn btn-ghost btn-full" id="btnNewSession">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+      Start New Session
+    </button>
+  </div>
+
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
