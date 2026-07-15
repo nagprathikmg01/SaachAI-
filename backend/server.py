@@ -167,6 +167,46 @@ def serve_terms():
 def serve_dashboard():
     return FileResponse(FRONTEND_DIR / "dashboard.html")
 
+@app.get("/qa-hub", include_in_schema=False)
+def serve_qa_hub():
+    return FileResponse(FRONTEND_DIR / "qa_hub.html")
+
+@app.get("/api/qa/status")
+def get_qa_status():
+    report_path = Path(__file__).parent.parent / "tests" / "TEST_REPORT.md"
+    if not report_path.is_file():
+        report_path = Path(__file__).parent.parent / "TEST_REPORT.md"
+    if not report_path.is_file():
+        return {"status": "error", "message": "Test report not found."}
+    try:
+        content = report_path.read_text(encoding="utf-8")
+        return {"status": "ok", "report_markdown": content}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.post("/api/qa/run-tests")
+async def run_qa_tests():
+    import asyncio
+    runner_path = Path(__file__).parent.parent / "tests" / "run_all_tests.py"
+    if not runner_path.is_file():
+        return {"status": "error", "message": "Test runner script not found."}
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            sys.executable, str(runner_path),
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+            cwd=str(runner_path.parent.parent)
+        )
+        stdout, stderr = await proc.communicate()
+        return {
+            "status": "ok" if proc.returncode == 0 else "failed",
+            "returncode": proc.returncode,
+            "stdout": stdout.decode("utf-8", errors="ignore"),
+            "stderr": stderr.decode("utf-8", errors="ignore")
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
 @app.get("/interview", include_in_schema=False)
 def serve_interview():
     # Interview analysis is now done via the Chrome extension.
@@ -177,7 +217,7 @@ def serve_interview():
 @app.get("/{filename:path}", include_in_schema=False)
 def serve_static(filename: str):
     file_path = FRONTEND_DIR / filename
-    if file_path.is_file() and file_path.suffix in {".css", ".js", ".png", ".ico", ".svg", ".json"}:
+    if file_path.is_file() and file_path.suffix in {".css", ".js", ".png", ".ico", ".svg", ".json", ".pdf"}:
         return FileResponse(file_path)
     # Default: serve dashboard for all unknown paths
     return FileResponse(FRONTEND_DIR / "dashboard.html")
